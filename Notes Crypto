@@ -1,0 +1,56 @@
+
+Ne pas utiliser les fonctions suivantes de GMU : "mpz_probab_prime_p", "mpz_nextprime", "mpz_gcd", "mpz_gcd_ui", "mpz_gcdext",
+"mpz_powm", "mpz_powm_ui", "mpz_powm_sec", "mpz_pow_ui" et "mpz_ui_pow_ui"
+
+Implémenter l'algo d'exponentiation modulaire qui va servir pour les deux algo suivants
+
+Implémenter l'algo de Fermat :
+	
+	Données : Un entier n et le nombre de répétitions souhaité k
+		pour i = 1 jusqu’à k faire
+			Choisir aléatoirement a tel que 1 < a < n − 1
+			si a^(n−1) /≡ 1 mod n alors
+				renvoyer "composé"
+			finsi
+		finpour
+		renvoyer "premier"
+
+Implémenter l'algo de Miller-Rabin
+
+	Données : Un entier n et le nombre de répétitions souhaité k
+		Décomposer n − 1 = (2^s) t	(t impair)
+		pour i = 1 jusqu’à k faire
+			Choisir aléatoirement a tel que 0 < a < n
+			y ← a^t mod n ;
+			si (y /≡ 1 mod n) et (y /≡ −1 mod n) alors
+				pour j = 1 jusqu’à s − 1 faire
+					y ← y^2 mod n ;
+					si y ≡ 1 mod n alors
+						renvoyer "composé"
+					si y ≡ −1 mod n alors
+						Arrêter la boucle de j
+						Continuer avec le i suivant
+					finsi
+				finpour
+				renvoyer "composé"
+			finsi
+		finpour
+		renvoyer "premier"
+
+Possibilité d'ajouter un README.txt
+
+	Données : Un entier a, le module n et un exposant H = SOMME( h(i) * 2^i) pour i de 0 à t et avec hi ∈ {0, 1} et h(t) = 1
+	Résultat : a^H mod n
+		r = a
+		pour i allant de t − 1 à 0 faire
+			r = r^2 mod n 
+			si h(i) = 1 alors
+				r = r · a mod n
+			finsi
+		finpour
+	Sorties : r
+
+
+
+
+
