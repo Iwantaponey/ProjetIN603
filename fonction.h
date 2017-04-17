@@ -1,12 +1,5 @@
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <dirent.h>
-#include <time.h>
-#include <sys/times.h>
-#include <pthread.h>
+#include <gmp.h>
+
+void fermat(mpz_t n, mpz_t k);
+void miller_rabin(mpz_t n, mpz_t k);
