@@ -29,21 +29,12 @@ expo binaire(mpz_t h)
 	}
 	printf("str = %s \n", str);
 	printf("taille de str= %d \n", i);
-	char * str2=malloc(strlen(str)*sizeof(char));
-	j=0;
-	for (k=strlen(str)-1; k>-1; k--)
-	{
-		str2[j]=str[k];
-		++j;
-	}
-	printf("str2 = %s \n", str2);
 	mpz_clear(d);
 	mpz_clear(q);
 	mpz_clear(u);
 	mpz_clear(x);
 	mpz_clear(r);
-	free(str);
-	expo e={str2, strlen(str2)};
+	expo e={str, strlen(str)};
 	return e;
 }
 
@@ -64,13 +55,14 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier 
 		mpz_mul(result, result, result); // Square
 		printf("e.str[%d]= %c \n",i,e.str[i]);
 		gmp_printf("dans la boucle for, i = %d, result = %Zd , e.str[%d]=%c\n", i,result,i,e.str[i]);
-		if(e.str[i]) // Si on a un 1 dans l'écriture binaire
+		if(e.str[i]=='1') // Si on a un 1 dans l'écriture binaire
 		{
 			mpz_mul(result, result, a); // Multiply
 			mpz_mod(result, result, n); // Multiply
 		}
+		gmp_printf("result = %Zd mod %Zd \n", result,n);
 	}
-	gmp_printf("result = %Zd mod %Zd \n", result,n);
+	
 	mpz_clear(bin);
 	mpz_clear(impair);
 }
