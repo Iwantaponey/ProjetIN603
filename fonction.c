@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "fonction.h"
 
-char * binaire(mpz_t h)
+expo binaire(mpz_t h)
 {
 	int i=0,j=0,k;
 	mpz_t x,r,d,u,q,z; char * str=malloc(2048*sizeof(char)); 
@@ -42,34 +43,36 @@ char * binaire(mpz_t h)
 	mpz_clear(x);
 	mpz_clear(r);
 	free(str);
-	return str2;
+	expo e={str2, strlen(str2)};
+	return e;
 }
 
 
 // La variable result sert à stocker le résultat de l'exponentiation rapide pour l'utiliser dans la fonction fermat
 void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier qui porte l'exposant h qui est aussi un entier, n est le modulo de a
 {
-	char * str;
+	expo e;
 	mpz_t bin, impair; // Déclaration d'un grand entier result
 	mpz_set(result, a); // Mettre la valeur de a dans result
 	mpz_init(bin);
 	mpz_init_set_str(impair, "1", 10); // Allouer et mettre 1 dans impair
-	str=binaire(h);
-	printf("dans square_multiply, str = %s \n", str);	 
-	int i, t = 3;
-	for (i = t-1; i < 0; i++)
+	e=binaire(h);
+	printf("dans square_multiply, str = %s \n", e.str);	 
+	int i ;
+	for (i = e.t-2; i>=0; i--)
 	{
 		mpz_mul(result, result, result); // Square
-		if(!mpz_cmp(bin, impair)) // Si on a un 1 dans l'écriture binaire
+		printf("e.str[%d]= %c \n",i,e.str[i]);
+		gmp_printf("dans la boucle for, i = %d, result = %Zd , e.str[%d]=%c\n", i,result,i,e.str[i]);
+		if(e.str[i]) // Si on a un 1 dans l'écriture binaire
 		{
 			mpz_mul(result, result, a); // Multiply
 			mpz_mod(result, result, n); // Multiply
 		}
 	}
-	gmp_printf("result = %Zd \n", result);
+	gmp_printf("result = %Zd mod %Zd \n", result,n);
 	mpz_clear(bin);
 	mpz_clear(impair);
-	free(str);
 }
 
 void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
