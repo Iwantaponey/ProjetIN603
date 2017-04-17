@@ -3,7 +3,8 @@ Ne pas utiliser les fonctions suivantes de GMU : "mpz_probab_prime_p", "mpz_next
 "mpz_powm", "mpz_powm_ui", "mpz_powm_sec", "mpz_pow_ui" et "mpz_ui_pow_ui"
 
 Implémenter l'algo d'exponentiation modulaire qui va servir pour les deux algo suivants
-	Données : Un entier a, le module n et un exposant H = SOMME( h(i) * 2^i) pour i de 0 à t et avec hi ∈ {0, 1} et h(t) = 1
+
+	Données : Un entier a, le module n et un exposant H qu'on doit décomposer en H = SOMME( h(i) * 2^i) pour i de 0 à t et avec hi ∈ {0, 1} et h(t) = 1
 	Résultat : a^H mod n
 		r = a
 		pour i allant de t − 1 à 0 faire
@@ -14,7 +15,9 @@ Implémenter l'algo d'exponentiation modulaire qui va servir pour les deux algo 
 		finpour
 	Sorties : r
 
-
+On fait seulement un square quand on a un zéro dans la décomposition binaire de l'exposant.
+On fait un square puis un multiply quand on a un un dans la décomposition binaire de l'exposant.
+ATTENTION : on ne doit pas tenir compte du un le plus grand. On prend un binaire qui n'a pas de zéros à gauche donc le plus grand nombre est forcément un un (dont on ne tient pas compte ici du coup)
 
 
 Implémenter l'algo de Fermat :
@@ -27,6 +30,7 @@ Implémenter l'algo de Fermat :
 			finsi
 		finpour
 		renvoyer "premier"
+
 
 Implémenter l'algo de Miller-Rabin
 
