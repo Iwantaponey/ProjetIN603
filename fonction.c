@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-void binaire(mpz_t bin, mpz_t h)
+char * binaire(mpz_t h)
 {
 	int i=0,j=0,k;
 	mpz_t x,r,d,u,q,z; char * str=malloc(2048*sizeof(char)); 
@@ -13,20 +13,12 @@ void binaire(mpz_t bin, mpz_t h)
 	mpz_init_set_str(u,"1",10);
 	mpz_init_set_str(z,"0",10);
 	mpz_init_set(x,h);
-	gmp_printf(" avant boucle r = %Zd \n",r);
-	gmp_printf("x = %Zd \n",x);
-	gmp_printf("d = %Zd \n",d);
-	gmp_printf("q = %Zd \n",q);
 	
 	
 	while(mpz_cmp(x,z) && i<2048)	
 	{	
 		mpz_fdiv_r(r,x,d);
 		mpz_fdiv_q(q,x,d);
-		gmp_printf(" boucle r = %Zd \n",r);
-		gmp_printf("x = %Zd \n",x);
-		gmp_printf("d = %Zd \n",d);
-		gmp_printf("q = %Zd \n",q);
 		if(!mpz_cmp(r,u))
 			str[i]='1';
 		else 
@@ -35,38 +27,35 @@ void binaire(mpz_t bin, mpz_t h)
 		i++;
 	}
 	printf("str = %s \n", str);
-	printf("i= %d \n", i);
+	printf("taille de str= %d \n", i);
 	char * str2=malloc(strlen(str)*sizeof(char));
 	j=0;
 	for (k=strlen(str)-1; k>-1; k--)
 	{
-		printf(" str[%d]= %c \n",k, str[k]);
 		str2[j]=str[k];
-		printf(" str2[%d]= %c \n",j, str[j]);
 		++j;
 	}
 	printf("str2 = %s \n", str2);
-	mpz_set_str(bin,str2,10);
 	mpz_clear(d);
 	mpz_clear(q);
 	mpz_clear(u);
 	mpz_clear(x);
 	mpz_clear(r);
 	free(str);
-	free(str2);
+	return str2;
 }
 
 
 // La variable result sert à stocker le résultat de l'exponentiation rapide pour l'utiliser dans la fonction fermat
 void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier qui porte l'exposant h qui est aussi un entier, n est le modulo de a
 {
+	char * str;
 	mpz_t bin, impair; // Déclaration d'un grand entier result
 	mpz_set(result, a); // Mettre la valeur de a dans result
 	mpz_init(bin);
 	mpz_init_set_str(impair, "1", 10); // Allouer et mettre 1 dans impair
-	
-//	appel fonction binaire(bin, h); // Récupérer le binaire de h pour la boucle
-	
+	str=binaire(h);
+	printf("dans square_multiply, str = %s \n", str);	 
 	int i, t = 3;
 	for (i = t-1; i < 0; i++)
 	{
@@ -77,8 +66,10 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier 
 			mpz_mod(result, result, n); // Multiply
 		}
 	}
+	gmp_printf("result = %Zd \n", result);
 	mpz_clear(bin);
 	mpz_clear(impair);
+	free(str);
 }
 
 void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
