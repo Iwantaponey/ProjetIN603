@@ -26,6 +26,47 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier 
 	mpz_clear(impair);
 }
 
+void miller_rabin(mpz_t n, int k)
+{
+	gmp_randstate_t state;
+	gmp_randinit_mt(state);
+	mpz_t impair, impair2, result;
+	mpz_init_set_str(impair2, "-1", 10);
+	mpz_init_set_str(impair, "1", 10);
+	mpz_init(result);
+	
+	// Appel fonction de décomposition de n-1 en (2^s)*t avec t impair
+	for (i = 1; i < k; i++)
+	{
+		gmp_randseed_ui(state, time(NULL));
+		mpz_urandomm(a, state, n);
+		while(mpz_cmp(a, n) == -1)
+		{
+			gmp_randseed_ui(state, time(NULL));
+			mpz_urandomm(a, state, n);
+		}
+		square_multiply(a, n, t, result); // Calcul de l'exponentielle dans a
+		if((result != impair) && (result != impair2)
+		{
+			for (j = 1; j < (s-1); j++)
+			{
+				square_multiply(result, n, 2, result);
+				if(result == impair)
+				{
+					printf("%s\n", "composé");
+				}
+				else if(result == impair2)
+				{
+					break;
+				}
+				
+			}
+			printf("%s\n", "composé");
+		}
+	}
+	printf("%s\n", "premier");
+}
+
 void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
 {
 	gmp_randstate_t state;
