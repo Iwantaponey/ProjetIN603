@@ -7,8 +7,9 @@
 
 expo binaire(mpz_t h)
 {
-	int i=0,j=0,k;
-	mpz_t x,r,d,u,q,z; char * str=malloc(2048*sizeof(char)); 
+	int i=0;
+	mpz_t x,r,d,u,q,z; 
+	char * str = malloc(2048*sizeof(char)); 
 	mpz_init(r); mpz_init(q);
 	mpz_init_set_str(d,"2",10);
 	mpz_init_set_str(u,"1",10);
@@ -16,7 +17,7 @@ expo binaire(mpz_t h)
 	mpz_init_set(x,h);
 	
 	
-	while(mpz_cmp(x,z) && i<2048)	
+	while(mpz_cmp(x,z) && (i < 2048))	
 	{	
 		mpz_fdiv_r(r,x,d);
 		mpz_fdiv_q(q,x,d);
@@ -34,42 +35,42 @@ expo binaire(mpz_t h)
 	mpz_clear(u);
 	mpz_clear(x);
 	mpz_clear(r);
-	expo e={str, strlen(str)};
+	expo e = {str, strlen(str)};
 	return e;
 }
 
 
 // La variable result sert à stocker le résultat de l'exponentiation rapide pour l'utiliser dans la fonction fermat
-void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) // a est l'entier qui porte l'exposant h qui est aussi un entier, n est le modulo de a
+// a est l'entier qui porte l'exposant h qui est aussi un entier, n est le modulo de a
+void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result) 
 {
 	expo e;
-	mpz_t bin, impair; // Déclaration d'un grand entier result
 	mpz_set(result, a); // Mettre la valeur de a dans result
-	mpz_init(bin);
-	mpz_init_set_str(impair, "1", 10); // Allouer et mettre 1 dans impair
-	e=binaire(h);
-	printf("dans square_multiply, str = %s \n", e.str);	 
+	
+	e = binaire(h);
+	printf("Dans square_multiply, str = %s \n", e.str);	 
+	
 	int i ;
-	for (i = e.t-2; i>=0; i--)
+	for (i = e.t-2; i >= 0; i--)
 	{
 		mpz_mul(result, result, result); // Square
-		printf("e.str[%d]= %c \n",i,e.str[i]);
-		gmp_printf("dans la boucle for, i = %d, result = %Zd , e.str[%d]=%c\n", i,result,i,e.str[i]);
+		mpz_mod(result, result, n);
+		gmp_printf("Carré de result : %Zd\n", result);
+		printf("e.str[%d]= %c \n", i, e.str[i]);
+		gmp_printf("Dans la boucle for, i = %d, result = %Zd , e.str[%d]=%c\n", i, result, i, e.str[i]);
 		if(e.str[i]=='1') // Si on a un 1 dans l'écriture binaire
 		{
 			mpz_mul(result, result, a); // Multiply
+			mpz_mod(result, result, n);
 		}
-		mpz_mod(result, result, n);
-		gmp_printf("result = %Zd mod %Zd \n", result,n);
+		gmp_printf("Result = %Zd mod %Zd \n", result, n);
 	}
-	
-	mpz_clear(bin);
-	mpz_clear(impair);
 }
 
 
 void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
 {
+	printf("n : %Zd k : %d\n", n, k);
 	printf("%s\n", "entrée dans fonction ok");
 	gmp_randstate_t state;
 	printf("%s\n", "déclaration state ok");
@@ -78,7 +79,7 @@ void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'es
 	
 	mpz_t a, result, temp;
 	printf("%s\n", "déclaration des mpz_t ok");
-	mpz_init(result); // Equivalent d'un malloc
+	mpz_init(result);
 	mpz_init(temp);
 	mpz_init(a);
 	mpz_sub_ui(temp, n, 1);
@@ -89,15 +90,18 @@ void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'es
 	{
 		printf("%s\n", "entrée en boucle ok");
 		mpz_urandomm(a, state, n);
-		gmp_printf("%s%Zd\n", "création du random ok", a);
+		gmp_printf("%s%Zd\n", "valeur du random créé :", a);
+		
 		square_multiply(a, temp, n, result); // Calcul de l'exponentielle dans a
-		printf("%s\n", "calcul de la valeur de l'entier à tester");
+		printf("%s\n", "calcul de la valeur de l'entier à tester ok");
+		
 		if(mpz_cmp_ui(result, 1) != 0) // On cherche à savoir si le random puissance n-1 modulo n est égal à 1
 		{
 			printf("%s\n", "Composé");
 		}
+		else printf("%s\n", "Premier1");
 	}
-	printf("%s\n", "Premier");
+	printf("%s\n", "Premier2");
 	
 	gmp_randclear(state);
 	mpz_clear(result);
