@@ -10,4 +10,5 @@ typedef struct
 expo binaire(mpz_t h);
 void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result);
 void fermat(mpz_t n, int k);
-void miller_rabin(mpz_t n, mpz_t k);
+mp_bitcnt_t decomposer(mpz_t tmp, mpz_t t);
+int miller_rabin(mpz_t n, int k);

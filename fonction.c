@@ -65,12 +65,12 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result)
 		}
 		gmp_printf("Result = %Zd mod %Zd \n", result, n);
 	}
+	free(e.str);
 }
 
 
 void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
 {
-	printf("n : %Zd k : %d\n", n, k);
 	printf("%s\n", "entrée dans fonction ok");
 	gmp_randstate_t state;
 	printf("%s\n", "déclaration state ok");
@@ -107,8 +107,66 @@ void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'es
 	mpz_clear(result);
 }
 
-void miller_rabin(mpz_t n, mpz_t k)
+mp_bitcnt_t decomposer(mpz_t tmp, mpz_t t) // tmp : nombre à décomposer (n-1), t : multiple impair
 {
+	mpz_t div;
+	mpz_init_set_str(div, "0", 10);
+	mp_bitcnt_t s = mpz_scan1(tmp, 0);
+	printf("s1 : %lu\n", s);
+	mpz_setbit(div, s); // Mettre le bit s de div à 1
+	printf("s1,5 : %lu\n", s);
+	mpz_cdiv_q(t, tmp, div); 
+	gmp_printf("t : %Zd\n", t);
+	return s;
+}
 
+int miller_rabin(mpz_t n, int k)
+{
+	mpz_t a, y, t, tmp;
+	mpz_init(a);
+	mpz_init(y);
+	mpz_init(t);
+	mpz_init(tmp);
 	
+	int i, j;
+	
+	mpz_sub_ui(tmp, n, 1); // La décomposition se fait sur n-1 stocké dans tmp
+	mp_bitcnt_t s = decomposer(tmp, t); // Appel de la fonction de décomposition de n-1 sous forme (2^s)*t avec t impair
+	printf("s2 : %lu\n", s);
+	gmp_printf("t2 : %Zd\n", t);
+	gmp_randstate_t state; // Création de la graine du random
+	gmp_randinit_default(state); //Initalisation de la graine du random
+	
+	for (i = 1; i < k; i++)
+	{
+		mpz_urandomm(a, state, n); //Génération du random 0<a<n
+		gmp_printf("a : %Zd\n", a);
+		square_multiply(a, n, t, y); //Calcul de a^t mod n
+		if((mpz_cmp_ui(y, 1) != 0) && (mpz_cmp_ui(y, -1) != 0)) // y!=1 et y!=-1
+		{
+			s = s - 1;
+			printf("s3 : %lu\n", s);
+			for (j = 1; j < s; j++)
+			{
+				printf("s4 : %lu\n", s);
+				mpz_mul(y, y, y); //y=y^2
+				mpz_mod(y, y, n); //y=y mod n;
+				gmp_printf("y : %Zd\n", y);
+				if(mpz_cmp_ui(y, 1) == 0)
+				{
+					printf("%s\n", "Composé1");
+					return 0;
+				}
+				if(mpz_cmp_ui(y, -1) == 0)
+				{
+					break; //Arrêter la boucle j et continuer avec le i suivant
+				}
+				s = s-1;
+			}
+			printf("%s\n", "Composé2");
+			return 0;
+		}		
+	}
+	printf("%s\n", "Premier");	
+	return 0;
 }
