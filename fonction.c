@@ -115,8 +115,9 @@ mp_bitcnt_t decomposer(mpz_t tmp, mpz_t t) // tmp : nombre à décomposer (n-1),
 	printf("s1 : %lu\n", s);
 	mpz_setbit(div, s); // Mettre le bit s de div à 1
 	printf("s1,5 : %lu\n", s);
-	mpz_cdiv_q(t, tmp, div); 
+	mpz_cdiv_q(t, tmp, div); // Trouver t
 	gmp_printf("t : %Zd\n", t);
+	mpz_clear(div);
 	return s;
 }
 
@@ -155,6 +156,11 @@ int miller_rabin(mpz_t n, int k)
 				if(mpz_cmp_ui(y, 1) == 0)
 				{
 					printf("%s\n", "Composé1");
+					mpz_clear(a);
+					mpz_clear(y);
+					mpz_clear(t);
+					mpz_clear(tmp);
+					gmp_randclear(state);
 					return 0;
 				}
 				if(mpz_cmp_ui(y, -1) == 0)
@@ -164,9 +170,19 @@ int miller_rabin(mpz_t n, int k)
 				s = s-1;
 			}
 			printf("%s\n", "Composé2");
+			mpz_clear(a);
+			mpz_clear(y);
+			mpz_clear(t);
+			mpz_clear(tmp);
+			gmp_randclear(state);
 			return 0;
 		}		
 	}
 	printf("%s\n", "Premier");	
+	mpz_clear(a);
+	mpz_clear(y);
+	mpz_clear(t);
+	mpz_clear(tmp);
+	gmp_randclear(state);
 	return 0;
 }
