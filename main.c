@@ -20,7 +20,8 @@ int main(int argc, char** argv)
 	}
 	
 	int k = 3;
-	//fermat(a, k); // Test : savoir si a est premier ou pas avec un nombre d'itération de k
+	printf("D'après l'algorithme de Fermat, le nombre");
+	fermat(a, k); // Test : savoir si a est premier ou pas avec un nombre d'itération de k
 	printf("D'après l'algorithme de Miller-Rabin, le nombre");
 	int ok = miller_rabin(a, k);
 	return ok;

@@ -25,45 +25,34 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result)
 	}
 }
 
-void fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
+int fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est le nombre de répétition
 {
-	printf("%s\n", "entrée dans fonction ok");
-	gmp_randstate_t state;
-	printf("%s\n", "déclaration state ok");
-	gmp_randinit_default(state);
-	printf("%s\n", "initialisation state ok");
-	
 	mpz_t a, result, tmp, tmp2;
-	printf("%s\n", "déclaration des mpz_t ok");
-	mpz_init(result);
-	mpz_init(tmp);
-	mpz_init(a);
-	mpz_init(tmp2);
+	mpz_init(a); mpz_init(result); mpz_init(tmp); mpz_init(tmp2);
 	mpz_sub_ui(tmp, n, 1);
 	mpz_sub_ui(tmp2, n, 3);
-	printf("%s\n", "initilisation des mpz_t ok");
+	
+	gmp_randstate_t state;
+	gmp_randinit_default(state);
 	
 	int i;
-	for (i = 1; i < k; i++)
+	for (i = 0; i < k; i++)
 	{
-		printf("%s\n", "entrée en boucle ok");
-		mpz_urandomm(a, state, tmp2); // Attention ici on doit enlever le 0
-		mpz_add_ui(a, a, 2);
-		gmp_printf("%s%Zd\n", "valeur du random créé :", a);
+		mpz_urandomm(a, state, tmp2); // Génération d'un random 0=<a=<n-3
+		mpz_add_ui(a, a, 2); // On rajoute 2 pour avoir 1<a<n-1
 		
-		square_multiply(a, tmp, n, result); // Calcul de l'exponentielle dans a
-		printf("%s\n", "calcul de la valeur de l'entier à tester ok");
+		square_multiply(a, n, tmp, result); // Calcul de l'exponentielle dans a
 		
 		if(mpz_cmp_ui(result, 1) != 0) // On cherche à savoir si le random puissance n-1 modulo n est égal à 1
 		{
-			printf("%s\n", "Composé");
+			gmp_printf(" %Zd est composé\n", n);
 		}
-		else printf("%s\n", "Premier1");
 	}
-	printf("%s\n", "Premier2");
+	gmp_printf(" %Zd est premier\n", n);
 	
 	gmp_randclear(state);
 	mpz_clear(result);
+	return 0;
 }
 
 mp_bitcnt_t decomposer(mpz_t tmp, mpz_t t) // tmp : nombre à décomposer (n-1), t : multiple impair
@@ -93,8 +82,8 @@ int miller_rabin(mpz_t n, int k)
 	
 	for (i = 1; i < k; i++)
 	{
-		mpz_urandomm(r, state, tmp2); //Génération du random 0<r<n
-		mpz_add_ui(r, r, 1);
+		mpz_urandomm(r, state, tmp2); //Génération du random 0=<r=<n-2
+		mpz_add_ui(r, r, 1); // On ajoute 1 pour avoir 0<r<n-1
 		
 		square_multiply(r, n, t, y); //Calcul de y = r^t mod n
 		
