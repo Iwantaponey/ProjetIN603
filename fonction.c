@@ -46,6 +46,7 @@ int fermat(mpz_t n, int k) // n est un grand entier et k est juste un int, c'est
 		if(mpz_cmp_ui(result, 1) != 0) // On cherche à savoir si le random puissance n-1 modulo n est égal à 1
 		{
 			gmp_printf(" %Zd est composé\n", n);
+			return 0;
 		}
 	}
 	gmp_printf(" %Zd est premier\n", n);
