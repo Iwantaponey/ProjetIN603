@@ -6,9 +6,9 @@
 int main(int argc, char** argv)
 {
 	mpz_t a;
-	mpz_init_set_str(a, argv[1], 10); 			/*!< Nombre à tester initié à la valeur saisie en argument d'exécution */
+	mpz_init_set_str(a, argv[1], 10); 			/*!< Nombre à tester initialisé à la valeur saisie en argument d'exécution */
 	
-	int k = atoi(argv[2]); 			/*!< Nombre de répétitions des deux algorithmes */
+	int k = atoi(argv[2]); 						/*!< Nombre de répétitions des deux algorithmes */
 	
 	
 	/***********Tests sur k***************************************/
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 		gmp_printf("Le nombre %Zd n'est pas considéré comme premier\n", a);
 		return 0;
 	}	
-	if(mpz_cmp_ui(a, 4) == -1) 			/*!< Si un nombre est strictement inférieur à 4 alors il est forcément premier */
+	if(mpz_cmp_ui(a, 4) == -1) 										/*!< Si un nombre est strictement inférieur à 4 alors il est forcément premier */
 	{
 		gmp_printf("Le nombre %Zd est premier\n", a);
 		return 0;

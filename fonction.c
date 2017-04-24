@@ -20,7 +20,7 @@ void square_multiply(mpz_t a, mpz_t n, mpz_t h, mpz_t result)
 		{
 			mpz_mul(result, result, a); 			/*!< Multiply */
 		}
-		mpz_mod(result, result, n);
+		mpz_mod(result, result, n);					/*!< Modulo */
 	}
 }
 
